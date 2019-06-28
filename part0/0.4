@@ -1,0 +1,20 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+server-->browser: URL redirect request
+note over server:
+Server responds to the post with a HTTP status 
+code 302, asking the browser to do a new HTTP GET
+request.
+end note
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: [{ content: "wakanda", date: "2019-06-25" }, ...]
+note over browser:
+The URL redirect resulted
+in the same sequence as
+in the example.
+end note

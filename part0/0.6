@@ -1,0 +1,10 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over browser:
+sends json data containing
+the note and the timestamp
+end note
+server-->browser: {"message":"note created"}
+note over server:
+Status code 201, does
+not ask for redirection
+end note
