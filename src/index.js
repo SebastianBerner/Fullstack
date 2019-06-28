@@ -15,12 +15,29 @@ const Button = (props) => (
     </button>
 )
 
+const Statistic = (props) => {
+  console.log(props)
+  return(
+    <tr>
+      <td> {props.text} </td>
+      <td> {props.stats}</td>
+      <td> {props.text1} </td>
+    </tr>
+  )
+}
 const Statistics = (props) => {
   console.log(props)
   return(
-    <div>
-      <p> {props.text} {props.stats} {props.text1} </p>
-    </div>
+      <table>
+        <tbody>
+          <Statistic text={"good"} stats={props.good} />
+          <Statistic text={"neutral"} stats={props.neutral} />
+          <Statistic text={"bad"} stats={props.bad} />
+          <Statistic text={"all"} stats={props.all} />
+          <Statistic text={"average"} stats={props.average} />
+          <Statistic text={"positive"} stats={props.positive} text1={"%"} />
+        </tbody>
+      </table>
   )
 }
 
@@ -50,37 +67,25 @@ const App = () => {
 
   const feedback = "give feedback"
   const stat = "statistics"
-  const button1 = "good"
-  const button2 = "netural"
-  const button3= "bad"
-  const pos = "positive"
-  const avg = "average"
-  const alll = "all"
-  const procent = "%"
 
   if (all !== 0)
   return (
     <div>
       <Header title={feedback}/>
-      <Button handleClick={() => goodClick(good)} text={button1} />
-      <Button handleClick={() => neutralClick(neutral)} text={button2} />
-      <Button handleClick={() => badClick(bad)} text={button3} />
+      <Button handleClick={() => goodClick(good)} text={"good"} />
+      <Button handleClick={() => neutralClick(neutral)} text={"neutral"} />
+      <Button handleClick={() => badClick(bad)} text={"bad"} />
       <Header title={stat} />
-      <Statistics text={button1} stats={good} />
-      <Statistics text={button2} stats={neutral} />
-      <Statistics text={button3} stats={bad} />
-      <Statistics text={alll} stats={all} />
-      <Statistics text={avg} stats={average} />
-      <Statistics text={pos} stats={positive} text1={procent} />
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive} />
     </div>
   )
   else
   return (
     <div>
       <Header title={feedback}/>
-      <Button handleClick={() => goodClick(good)} text={button1} />
-      <Button handleClick={() => neutralClick(neutral)} text={button2} />
-      <Button handleClick={() => badClick(bad)} text={button3} />
+      <Button handleClick={() => goodClick(good)} text={"good"} />
+      <Button handleClick={() => neutralClick(neutral)} text={"neutral"} />
+      <Button handleClick={() => badClick(bad)} text={"bad"} />
       <Header title={stat} />
       <p> No feedback given</p>
     </div>
