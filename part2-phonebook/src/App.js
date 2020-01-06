@@ -1,15 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Rows from './components/Rows'
 import SubmitButton from './components/SubmitButton'
+import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '040-1234567'
-    }
-  ]) 
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState('some error happened')
+
+
+  useEffect(() => {
+    console.log('effect')
+    personService
+      .getAll()
+      .then(initialPersons => {
+        console.log('promise fulfilled')
+        setPersons(initialPersons)
+      })
+  }, [])
 
   const handleName = (event) => {
     setNewName(event.target.value)
@@ -30,28 +40,40 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
-    console.log("button clicked: ", event.target)
-    console.log("persons: ", persons)
+    personService
+      .create(newPerson)
+      .then(person => {
+        setPersons(persons.concat(person))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 }
 
-  /*const rows = () => {
-    const values = Object.values(persons)
-    console.log("keys are: ", values)
-    return values.map((x, i) => 
-     <li key={i}> 
-        {x.name} {x.number}
-      </li>)
-  }*/
+  const removePerson = (name) => {
+    const findPers = persons.find(person => person.name === name)
+    console.log("removing obj: ", findPers)
+    if(window.confirm("Are you sure you want to delete ", name)) {
+      personService
+        .remove(findPers)
+        .then(() => personService.getAll().then(x => {
+          setPersons(x)
+        }))
+    }
+    else {
+      return console.log("Not deleted")
+    }
+  
 
+  }
 
 
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={errorMessage} />
+
       <form onSubmit={addPerson}>
         <div>
           name: <input 
@@ -71,7 +93,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        <Rows persons={persons} />
+        <Rows persons={persons} onRemove={removePerson}/>
       </ul>
     </div>
   )
