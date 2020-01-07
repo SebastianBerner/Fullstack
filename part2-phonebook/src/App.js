@@ -8,7 +8,7 @@ const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ errorMessage, setErrorMessage ] = useState('some error happened')
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
 
   useEffect(() => {
@@ -44,6 +44,12 @@ const App = () => {
       .create(newPerson)
       .then(person => {
         setPersons(persons.concat(person))
+        setErrorMessage(
+          `Added ${person.name}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setNewName('')
         setNewNumber('')
       })
@@ -52,19 +58,20 @@ const App = () => {
 
   const removePerson = (name) => {
     const findPers = persons.find(person => person.name === name)
-    console.log("removing obj: ", findPers)
     if(window.confirm("Are you sure you want to delete ", name)) {
       personService
         .remove(findPers)
         .then(() => personService.getAll().then(x => {
+          console.log("x is: ", x)
           setPersons(x)
+          setErrorMessage(
+            `Deleted ${name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         }))
-    }
-    else {
-      return console.log("Not deleted")
-    }
-  
-
+      }
   }
 
 
