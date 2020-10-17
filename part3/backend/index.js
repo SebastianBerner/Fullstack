@@ -1,7 +1,13 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
+
+morgan.token('person', req => {
+  return JSON.stringify(req.body)
+})
 
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
 
 let persons = [
     {
@@ -21,10 +27,23 @@ let persons = [
     }
   ]
 
+  const generateId = () => {
+    const maxId = persons.length > 0
+      ? Math.max(...persons.map(n => n.id))
+      : 0
+    return maxId + 1
+  }
+
   app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
-  
+
+  app.get('/info', (request, response) => {
+    const date = new Date()
+    const l = persons.length
+    response.send(`Phonebook has info ${l} for people\n\n <p>${date} </p>`)
+  })
+
   app.get('/api/persons', (request, response) => {
     response.json(persons)
   })
@@ -47,12 +66,22 @@ let persons = [
     response.status(204).end()
   })
 
-  app.post('/api/notes', (request, response) => {
+  app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.content) {
+    if (!body.name) {
       return response.status(400).json({ 
-        error: 'content missing' 
+        error: 'name missing' 
+      })
+    }
+    if(!body.number) {
+      return response.status(400).json({
+        error: 'number missing'
+      })
+    }
+    if(persons.find(x => body.name === x.name)) {
+      return response.status(400).json({
+        error: 'name must be unique'
       })
     }
   
@@ -63,9 +92,9 @@ let persons = [
 
     }
   
-    notes = notes.concat(note)
+    persons = persons.concat(person)
   
-    response.json(note)
+    response.json(person)
   })
 
 
