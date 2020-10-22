@@ -5,10 +5,10 @@ import personService from './services/persons'
 import Notification from './components/Notification'
 
 const App = () => {
-  const [ persons, setPersons] = useState([]) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ errorMessage, setErrorMessage ] = useState(null)
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -30,35 +30,58 @@ const App = () => {
   }
 
   const addPerson = (event) => {
+
     event.preventDefault()
     const names = Object.values(persons).map(x => x.name)
-    if (names.includes(newName)) {
-      return window.alert(newName + ' is already added to phonebook!')
-    }
-    else {
     const newPerson = {
       name: newName,
       number: newNumber
     }
-    personService
-      .create(newPerson)
-      .then(person => {
-        setPersons(persons.concat(person))
+    const pers = persons.find(person => person.name === newName)
+    if (names.includes(newName) && window.confirm(newName + ' is already added to phonebook!')) {
+      personService
+        .update(pers.id, newPerson)
+        .then(person => {
+          const newList = persons.map(x => {
+            if(pers.id === x.id) {
+              const updatedItem = {
+                ...x,
+                number: person.number
+              }
+              return updatedItem
+            }
+            return x
+          })
+        setPersons(newList)
         setErrorMessage(
-          `Added ${person.name}`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        setNewName('')
-        setNewNumber('')
-      })
+            `Changed ${person.name} number`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000)
+        })
+      
+    }
+    else {
+      personService
+        .create(newPerson)
+        .then(person => {
+          setPersons(persons.concat(person))
+          setErrorMessage(
+            `Added ${person.name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setNewName('')
+          setNewNumber('')
+        })
+    }
   }
-}
 
   const removePerson = (name) => {
     const findPers = persons.find(person => person.name === name)
-    if(window.confirm("Are you sure you want to delete ", name)) {
+    if (window.confirm("Are you sure you want to delete ", name)) {
       personService
         .remove(findPers)
         .then(() => personService.getAll().then(x => {
@@ -71,7 +94,7 @@ const App = () => {
             setErrorMessage(null)
           }, 5000)
         }))
-      }
+    }
   }
 
 
@@ -83,7 +106,7 @@ const App = () => {
 
       <form onSubmit={addPerson}>
         <div>
-          name: <input 
+          name: <input
             value={newName}
             onChange={handleName}
           />
@@ -100,7 +123,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        <Rows persons={persons} onRemove={removePerson}/>
+        <Rows persons={persons} onRemove={removePerson} />
       </ul>
     </div>
   )
