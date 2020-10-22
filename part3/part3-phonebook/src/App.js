@@ -38,7 +38,7 @@ const App = () => {
       number: newNumber
     }
     const pers = persons.find(person => person.name === newName)
-    if (names.includes(newName) && window.confirm(newName + ' is already added to phonebook!')) {
+    if (names.includes(newName)) {
       personService
         .update(pers.id, newPerson)
         .then(person => {
@@ -53,14 +53,7 @@ const App = () => {
             return x
           })
         setPersons(newList)
-        setErrorMessage(
-            `Changed ${person.name} number`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 3000)
-        })
-      
+        })            
     }
     else {
       personService
@@ -76,6 +69,13 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(error => {
+          console.log(error.response)
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000)
+        })  
     }
   }
 
