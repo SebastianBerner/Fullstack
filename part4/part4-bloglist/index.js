@@ -1,45 +1,60 @@
-require('dotenv').config()
-const http = require('http')
-const express = require('express')
-const app = express()
-const cors = require('cors')
-const mongoose = require('mongoose')
+const app = require('./app') // varsinainen Express-sovellus
+//const http = require('http')
+const config = require('./utils/config')
+const logger = require('./utils/logger')
 
-const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
+// const server = http.createServer(app)
+
+// server.listen(config.PORT, () => {
+//   logger.info(`Server running on port ${config.PORT}`)
+// })
+
+const PORT = config.PORT
+ app.listen(PORT, () => {
+   logger.info(`Server running on port ${config.PORT}`)
 })
 
-const Blog = mongoose.model('Blog', blogSchema)
+// const app = require('./app') // the actual Express application
+// const config = require('./utils/config')
+// const logger = require('./utils/logger')
+// const http = require('http')
+// const express = require('express')
+// const app = express()
+// const cors = require('cors')
+// const mongoose = require('mongoose')
 
-const mongoUrl = process.env.MONGODB_URI
+// const server = http.createServer(app)
 
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
-app.use(cors())
-app.use(express.json())
 
-app.get('/api/blogs', (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
-})
+// const Blog = mongoose.model('Blog', blogSchema)
 
-app.post('/api/blogs', (request, response) => {
-  const blog = new Blog(request.body)
+// const mongoUrl = process.env.MONGODB_URI
 
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
-})
+// mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
-const PORT = process.env.PORT
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+// app.use(cors())
+// app.use(express.json())
+
+// app.get('/api/blogs', (request, response) => {
+//   Blog
+//     .find({})
+//     .then(blogs => {
+//       response.json(blogs)
+//     })
+// })
+
+// app.post('/api/blogs', (request, response) => {
+//   const blog = new Blog(request.body)
+
+//   blog
+//     .save()
+//     .then(result => {
+//       response.status(201).json(result)
+//     })
+// })
+
+// const PORT = config.PORT
+// app.listen(PORT, () => {
+//   logger.info(`Server running on port ${config.PORT}`)
+// })
