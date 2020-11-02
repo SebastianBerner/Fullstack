@@ -51,7 +51,6 @@ const mostLikes = (blogs) => {
       const authorLikes = blogs.filter(x => x.author === author).map(x => x.likes).reduce((sum, x) => sum + x)
       return {author:author, likes: authorLikes}
     }).reduce((prev, current) => prev.likes > current.likes ? prev : current)
-    console.log(mostAuthor)
     return mostAuthor
   }
 }
