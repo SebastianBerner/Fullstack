@@ -2,22 +2,23 @@
 
 //DELETE http://localhost:3003/api/blogs/5a422b3a1b54a676234d17f9
 
-PUT http://localhost:3003/api/blogs/5fa173c916d52e14b1a39890
+//PUT http://localhost:3003/api/blogs/5fa173c916d52e14b1a39890
 # Content-type: application/json
 
 # {
 #   "title": "deleteing",
 #   "author": "Stormy Daniels",
 #   "url": "fuckmenow",
-#   "likes": "1"
+#   "likes": "1"  
 # }
 
 POST http://localhost:3003/api/blogs
 Content-type: application/json
 
 {
-  "title": "deleteing",
+  "title": "deleteing21",
   "author": "Stormy Daniels",
   "url": "fuckmenow",
-  "likes": "0"
+  "likes": "0",
+  "user": "karjuva  "
 }

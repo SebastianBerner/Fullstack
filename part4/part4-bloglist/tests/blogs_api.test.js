@@ -4,6 +4,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 
 beforeEach(async () => {
@@ -101,7 +103,6 @@ test("blog without title and url responds with 400 bad request", async () => {
   
       expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
-
 
 
 //   test('blog without content is not added', async () => {
