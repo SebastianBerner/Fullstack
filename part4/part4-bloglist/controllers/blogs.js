@@ -38,23 +38,21 @@ blogsRouter.get('/:id', async (request, response) => {
   })
   
   
-  blogsRouter.put('/:id', (request, response, next) => {
+  blogsRouter.put('/:id', async (request, response) => {
     const body = request.body
   
-    const blog = {
-      _id: body._id, 
-      title: body.title, 
-      author: body.author, 
-      url: body.url, 
+    const blogLikes = {
       likes: body.likes, 
-      __v: body.__v
     }
   
-    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-      .then(updatedBlog => {
-        response.json(updatedBlog)
-      })
-      .catch(error => next(error))
+    const updated = await Blog.findByIdAndUpdate(request.params.id, blogLikes, { new: true })
+      
+    if(updated) {
+      response.status(200).json(updated.toJSON())
+    }
+    else {
+      response.status(404).end()
+    }
   })
   
   module.exports = blogsRouter
